@@ -1,66 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace DSSE
 {
-    public partial class SlotSwap : Form
-    {
-        public SlotSwap(ComboboxItem[] names)
-        {
-            InitializeComponent();
-            foreach (var t in names.Where(t => !Name.ToLower().EndsWith("0a")))
-            {
-                comboBoxSlot1.Items.Add(t);
-                comboBoxSlot2.Items.Add(t);
-            }
-            if (comboBoxSlot1.Items.Count > -1)
-                comboBoxSlot1.SelectedIndex = 0;
-            if (comboBoxSlot2.Items.Count > -1)
-                comboBoxSlot2.SelectedIndex = 0;
-        }
+	public partial class SlotSwap : Form
+	{
+		private string _Slot1;
+		private string _Slot2;
 
-        public SlotSwap(string[] names)
-        {
-            InitializeComponent();
-            foreach (var Name in names.Where(Name => !Name.ToLower().EndsWith("0a")))
-            {
-                comboBoxSlot1.Items.Add(Name);
-                comboBoxSlot2.Items.Add(Name);
-            }
-            if (comboBoxSlot1.Items.Count > 0)
-            {
-                comboBoxSlot1.SelectedIndex = 0;
-                comboBoxSlot2.SelectedIndex = 0;
-            }
-        }
+		public SlotSwap(string[] names)
+		{
+			InitializeComponent();
+			foreach (string Name in names)
+			{
+				if (!Name.ToLower().EndsWith("0a"))
+				{
+					comboBoxSlot1.Items.Add(Name);
+					comboBoxSlot2.Items.Add(Name);
+				}
+			}
+			if (comboBoxSlot1.Items.Count > 0)
+			{
+				comboBoxSlot1.SelectedIndex = 0;
+				comboBoxSlot2.SelectedIndex = 0;
+			}
+		}
 
-        public ComboboxItem Slot1 { get; private set; }
-        public ComboboxItem Slot2 { get; private set; }
+		public void OK_Button_Click(System.Object sender, System.EventArgs e)
+		{
+			this.DialogResult = System.Windows.Forms.DialogResult.OK;
+			if (comboBoxSlot1.SelectedIndex > -1)
+				_Slot1 = comboBoxSlot1.SelectedItem.ToString();
+			if (comboBoxSlot2.SelectedIndex > -1)
+				_Slot2 = comboBoxSlot2.SelectedItem.ToString();
 
-        public void OK_Button_Click(Object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            if (comboBoxSlot1.SelectedIndex > -1)
-                Slot1 = ((ComboboxItem) comboBoxSlot1.SelectedItem);
-            if (comboBoxSlot2.SelectedIndex > -1)
-                Slot2 = ((ComboboxItem) comboBoxSlot2.SelectedItem);
-            ;
+			this.Close();
+		}
 
-            Close();
-        }
+		public void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+		{
+			this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			_Slot1 = null;
+			_Slot2 = null;
+			this.Close();
+		}
 
-        public void Cancel_Button_Click(Object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Slot1 = null;
-            Slot2 = null;
-            Close();
-        }
+		public string Slot1
+		{ get { return _Slot1; } }
+		public string Slot2
+		{ get { return _Slot2; } }
 
-        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            OK_Button.Enabled = comboBoxSlot1.SelectedIndex != comboBoxSlot2.SelectedIndex;
-        }
-    }
+		private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			OK_Button.Enabled = comboBoxSlot1.SelectedIndex != comboBoxSlot2.SelectedIndex;
+		}
+	}
 }

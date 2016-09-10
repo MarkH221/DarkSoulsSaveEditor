@@ -1,68 +1,51 @@
+using Microsoft.VisualBasic;
 using System;
-using System.Linq;
+using System.Collections;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
-
 namespace DSSE
 {
-    public partial class SlotSelector
-    {
-        public int xselectedindex;
-        public string xselectedsave;
+	public partial class SlotSelector
+	{
+		public string xselectedsave;
+		public SlotSelector(string[] names)
+		{
+			InitializeComponent();
+			foreach (string Name in names)
+			{
+				if (!Name.ToLower().EndsWith("0a"))
+				{
+					ComboBox1.Items.Add(Name);
+				}
+			}
+			if (ComboBox1.Items.Count > -1)
+				ComboBox1.SelectedIndex = 0;
+		}
 
-        public SlotSelector(ComboboxItem[] names)
-        {
-            InitializeComponent();
-            foreach (var t in names.Where(t => !Text.ToLower().EndsWith("0a")))
-            {
-                ComboBox1.Items.Add(t);
-            }
-            if (ComboBox1.Items.Count > -1)
-                ComboBox1.SelectedIndex = 0;
-        }
+		public void OK_Button_Click(System.Object sender, System.EventArgs e)
+		{
+			this.DialogResult = System.Windows.Forms.DialogResult.OK;
+			if (ComboBox1.SelectedIndex > -1)
+			{
+				xselectedsave = (string)ComboBox1.SelectedItem;
+			}
+			this.Close();
+		}
 
-        public SlotSelector(string[] names)
-        {
-            InitializeComponent();
-            for (var index = 0; index < names.Length; index++)
-            {
-                if (!names[index].ToLower().EndsWith("0a"))
-                {
-                    ComboBox1.Items.Add(new ComboboxItem {Text = names[index], Value = index});
-                }
-            }
-            if (ComboBox1.Items.Count > -1)
-                ComboBox1.SelectedIndex = 0;
-        }
+		public void Cancel_Button_Click(System.Object sender, System.EventArgs e)
+		{
+			this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			xselectedsave = null;
+			this.Close();
+		}
 
-        public string SelectedSave
-        {
-            get { return xselectedsave; }
-            set { xselectedsave = value; }
-        }
-
-        public int SelectedIndex
-        {
-            get { return xselectedindex; }
-            set { xselectedindex = value; }
-        }
-
-        public void OK_Button_Click(Object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            if (ComboBox1.SelectedIndex > -1)
-            {
-                xselectedsave = ((ComboboxItem) ComboBox1.SelectedItem).Text;
-                xselectedindex = ((ComboboxItem) ComboBox1.SelectedItem).Value;
-            }
-            Close();
-        }
-
-        public void Cancel_Button_Click(Object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            xselectedsave = null;
-            xselectedindex = -1;
-            Close();
-        }
-    }
+		public string SelectedSave
+		{
+			get { return xselectedsave; }
+			set { xselectedsave = value; }
+		}
+	}
 }
+
